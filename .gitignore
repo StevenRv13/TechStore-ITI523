@@ -1,0 +1,18 @@
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+# Archivos temporales
+*.tmp
+*.log
+
+# Carpetas de dependencias (futuro)
+node_modules/
+vendor/
+
+# Archivos de configuración sensibles (futuro)
+config/database.php
+.env
+
+# Archivos de IDE
+.vscode/settings.json
+.idea/
