@@ -1,3 +1,19 @@
+<?php
+session_start();
+require_once 'config/database.php';
+
+// Verificar si está logueado
+$isLoggedIn = isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'];
+$userName = $isLoggedIn ? $_SESSION['user_name'] : '';
+
+// Obtener contador de carrito si está logueado
+$cartCount = 0;
+if ($isLoggedIn) {
+    require_once 'php/cart.php';
+    $cartManager = new CartManager();
+    $cartCount = $cartManager->getCartItemCount();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,12 +44,21 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <small>
-                        <a href="pages/auth/login.html" class="text-white text-decoration-none me-3">
-                            <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
-                        </a>
-                        <a href="pages/auth/register.html" class="text-white text-decoration-none">
-                            <i class="fas fa-user-plus me-1"></i>Registrarse
-                        </a>
+                        <?php if ($isLoggedIn): ?>
+                            <span class="text-white me-3">
+                                <i class="fas fa-user me-1"></i>Hola, <?php echo htmlspecialchars($userName); ?>
+                            </span>
+                            <a href="php/auth.php?action=logout" class="text-white text-decoration-none">
+                                <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                            </a>
+                        <?php else: ?>
+                            <a href="pages/auth/login.php" class="text-white text-decoration-none me-3">
+                                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                            </a>
+                            <a href="pages/auth/register.php" class="text-white text-decoration-none">
+                                <i class="fas fa-user-plus me-1"></i>Registrarse
+                            </a>
+                        <?php endif; ?>
                     </small>
                 </div>
             </div>
@@ -42,7 +67,7 @@
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container">
                     <!-- Logo -->
-                    <a class="navbar-brand fw-bold fs-3" href="index.html">
+                    <a class="navbar-brand fw-bold fs-3" href="index.php">
                         <i class="fas fa-laptop me-2 text-primary"></i>TechStore
                     </a>
                     
@@ -55,7 +80,7 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" href="index.html">
+                                <a class="nav-link active" href="index.php">
                                     <i class="fas fa-home me-1"></i>Inicio
                                 </a>
                             </li>
@@ -64,22 +89,22 @@
                                     <i class="fas fa-th-large me-1"></i>Categorías
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="pages/products/category.html?cat=smartphones">
+                                    <li><a class="dropdown-item" href="pages/products/catalog.php?category=Smartphones">
                                         <i class="fas fa-mobile-alt me-2"></i>Smartphones
                                     </a></li>
-                                    <li><a class="dropdown-item" href="pages/products/category.html?cat=laptops">
+                                    <li><a class="dropdown-item" href="pages/products/catalog.php?category=Laptops">
                                         <i class="fas fa-laptop me-2"></i>Laptops
                                     </a></li>
-                                    <li><a class="dropdown-item" href="pages/products/category.html?cat=tablets">
+                                    <li><a class="dropdown-item" href="pages/products/catalog.php?category=Tablets">
                                         <i class="fas fa-tablet-alt me-2"></i>Tablets
                                     </a></li>
-                                    <li><a class="dropdown-item" href="pages/products/category.html?cat=accesorios">
+                                    <li><a class="dropdown-item" href="pages/products/catalog.php?category=Accesorios">
                                         <i class="fas fa-headphones me-2"></i>Accesorios
                                     </a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="pages/products/catalog.html">
+                                <a class="nav-link" href="pages/products/catalog.php">
                                     <i class="fas fa-search me-1"></i>Todos los Productos
                                 </a>
                             </li>
@@ -96,12 +121,21 @@
                         </div>
                         
                         <!-- Cart -->
-                        <a href="pages/cart/shopping-cart.html" class="btn btn-outline-primary position-relative">
-                            <i class="fas fa-shopping-cart me-1"></i>Carrito
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
-                                0
-                            </span>
-                        </a>
+                        <?php if ($isLoggedIn): ?>
+                            <a href="pages/cart/shopping-cart.php" class="btn btn-outline-primary position-relative">
+                                <i class="fas fa-shopping-cart me-1"></i>Carrito
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
+                                    <?php echo $cartCount; ?>
+                                </span>
+                            </a>
+                        <?php else: ?>
+                            <a href="pages/auth/login.php" class="btn btn-outline-primary position-relative">
+                                <i class="fas fa-shopping-cart me-1"></i>Carrito
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
+                                    0
+                                </span>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </nav>
@@ -116,7 +150,7 @@
                     <h1 class="display-4 fw-bold mb-4">La Mejor Tecnología a Tu Alcance</h1>
                     <p class="lead mb-4">Descubre los últimos smartphones, laptops, tablets y accesorios tech con los mejores precios de Costa Rica.</p>
                     <div class="d-flex gap-3">
-                        <a href="pages/products/catalog.html" class="btn btn-light btn-lg">
+                        <a href="pages/products/catalog.php" class="btn btn-light btn-lg">
                             <i class="fas fa-shopping-bag me-2"></i>Comprar Ahora
                         </a>
                         <a href="#productos-destacados" class="btn btn-outline-light btn-lg">
@@ -202,9 +236,15 @@
                                 <span class="text-muted text-decoration-line-through">₡850,000</span>
                                 <h4 class="text-primary fw-bold">₡722,500</h4>
                             </div>
-                            <button class="btn btn-primary add-to-cart" data-id="1" data-name="iPhone 15 Pro" data-price="722500">
-                                <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
-                            </button>
+                            <?php if ($isLoggedIn): ?>
+                                <button class="btn btn-primary add-to-cart" data-id="1" data-name="iPhone 15 Pro" data-price="722500">
+                                    <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
+                                </button>
+                            <?php else: ?>
+                                <a href="pages/auth/login.php" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login para Comprar
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -229,9 +269,15 @@
                             <div class="price-section mb-3">
                                 <h4 class="text-primary fw-bold">₡1,299,000</h4>
                             </div>
-                            <button class="btn btn-primary add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="1299000">
-                                <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
-                            </button>
+                            <?php if ($isLoggedIn): ?>
+                                <button class="btn btn-primary add-to-cart" data-id="2" data-name="MacBook Air M2" data-price="1299000">
+                                    <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
+                                </button>
+                            <?php else: ?>
+                                <a href="pages/auth/login.php" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login para Comprar
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -259,9 +305,15 @@
                             <div class="price-section mb-3">
                                 <h4 class="text-primary fw-bold">₡695,000</h4>
                             </div>
-                            <button class="btn btn-primary add-to-cart" data-id="3" data-name="Samsung Galaxy S24" data-price="695000">
-                                <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
-                            </button>
+                            <?php if ($isLoggedIn): ?>
+                                <button class="btn btn-primary add-to-cart" data-id="3" data-name="Samsung Galaxy S24" data-price="695000">
+                                    <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
+                                </button>
+                            <?php else: ?>
+                                <a href="pages/auth/login.php" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login para Comprar
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -286,16 +338,22 @@
                             <div class="price-section mb-3">
                                 <h4 class="text-primary fw-bold">₡899,000</h4>
                             </div>
-                            <button class="btn btn-primary add-to-cart" data-id="4" data-name="iPad Pro 11" data-price="899000">
-                                <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
-                            </button>
+                            <?php if ($isLoggedIn): ?>
+                                <button class="btn btn-primary add-to-cart" data-id="4" data-name="iPad Pro 11" data-price="899000">
+                                    <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
+                                </button>
+                            <?php else: ?>
+                                <a href="pages/auth/login.php" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login para Comprar
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="text-center mt-5">
-                <a href="pages/products/catalog.html" class="btn btn-outline-primary btn-lg">
+                <a href="pages/products/catalog.php" class="btn btn-outline-primary btn-lg">
                     <i class="fas fa-eye me-2"></i>Ver Todos los Productos
                 </a>
             </div>
@@ -341,10 +399,10 @@
                 <div class="col-lg-2 col-md-6">
                     <h6 class="fw-bold mb-3">Categorías</h6>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-muted text-decoration-none">Smartphones</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">Laptops</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">Tablets</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">Accesorios</a></li>
+                        <li><a href="pages/products/catalog.php?category=Smartphones" class="text-muted text-decoration-none">Smartphones</a></li>
+                        <li><a href="pages/products/catalog.php?category=Laptops" class="text-muted text-decoration-none">Laptops</a></li>
+                        <li><a href="pages/products/catalog.php?category=Tablets" class="text-muted text-decoration-none">Tablets</a></li>
+                        <li><a href="pages/products/catalog.php?category=Accesorios" class="text-muted text-decoration-none">Accesorios</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-6">
@@ -359,10 +417,15 @@
                 <div class="col-lg-2 col-md-6">
                     <h6 class="fw-bold mb-3">Mi Cuenta</h6>
                     <ul class="list-unstyled">
-                        <li><a href="pages/auth/login.html" class="text-muted text-decoration-none">Iniciar Sesión</a></li>
-                        <li><a href="pages/auth/register.html" class="text-muted text-decoration-none">Registrarse</a></li>
-                        <li><a href="pages/user/orders.html" class="text-muted text-decoration-none">Mis Pedidos</a></li>
-                        <li><a href="pages/user/profile-edit.html" class="text-muted text-decoration-none">Mi Perfil</a></li>
+                        <?php if ($isLoggedIn): ?>
+                            <li><a href="pages/cart/shopping-cart.php" class="text-muted text-decoration-none">Mi Carrito</a></li>
+                            <li><a href="pages/user/orders.php" class="text-muted text-decoration-none">Mis Pedidos</a></li>
+                            <li><a href="pages/user/profile-edit.php" class="text-muted text-decoration-none">Mi Perfil</a></li>
+                            <li><a href="php/auth.php?action=logout" class="text-muted text-decoration-none">Cerrar Sesión</a></li>
+                        <?php else: ?>
+                            <li><a href="pages/auth/login.php" class="text-muted text-decoration-none">Iniciar Sesión</a></li>
+                            <li><a href="pages/auth/register.php" class="text-muted text-decoration-none">Registrarse</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -401,5 +464,64 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Custom JS -->
     <script src="assets/js/main.js"></script>
+
+    <script>
+        // Agregar funcionalidad AJAX para carrito
+        $(document).on('click', '.add-to-cart', function(e) {
+            e.preventDefault();
+            
+            const productId = $(this).data('id');
+            const productName = $(this).data('name');
+            const productPrice = $(this).data('price');
+            const button = $(this);
+            
+            // Mostrar loading
+            button.prop('disabled', true);
+            const originalText = button.html();
+            button.html('<i class="fas fa-spinner fa-spin me-2"></i>Agregando...');
+            
+            $.ajax({
+                url: 'php/cart.php',
+                method: 'POST',
+                data: {
+                    action: 'add_to_cart',
+                    product_id: productId,
+                    quantity: 1
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Actualizar contador
+                        $('#cartCount').text(parseInt($('#cartCount').text()) + 1);
+                        
+                        // Mostrar éxito
+                        button.removeClass('btn-primary').addClass('btn-success');
+                        button.html('<i class="fas fa-check me-2"></i>Agregado');
+                        
+                        // Mostrar notificación
+                        if (typeof showNotification === 'function') {
+                            showNotification(productName + ' agregado al carrito', 'success');
+                        }
+                        
+                        // Restaurar botón después de 2 segundos
+                        setTimeout(() => {
+                            button.removeClass('btn-success').addClass('btn-primary');
+                            button.html(originalText);
+                            button.prop('disabled', false);
+                        }, 2000);
+                    } else {
+                        alert('Error: ' + response.message);
+                        button.prop('disabled', false);
+                        button.html(originalText);
+                    }
+                },
+                error: function() {
+                    alert('Error de conexión');
+                    button.prop('disabled', false);
+                    button.html(originalText);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
