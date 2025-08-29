@@ -190,7 +190,7 @@ $totalFinal = $total + $impuestos + $envio;
         }
         
         function checkout() {
-            alert('Proceso de pago en desarrollo.\n\n¡Gracias por usar TechStore!');
+            window.location.href = 'checkout.php';
         }
     </script>
 </body>
