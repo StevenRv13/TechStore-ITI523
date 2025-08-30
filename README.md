@@ -9,12 +9,18 @@ La tienda virtual permite a los usuarios:
 - Consultar historial de pedidos
 - Generar reportes de ventas
 Todo esto con un diseño responsive y una experiencia de usuario intuitiva.
-🧠 Tecnologías Utilizadas
-|  |  | 
-|  |  | 
-|  |  | 
-|  |  | 
-|  |  | 
+
+
+| Lenguaje       | Porcentaje de uso |
+|----------------|-------------------|
+| 🐘 PHP          | 69.8%             |
+| ⚡ Hack         | 12.0%             |
+| ✨ JavaScript   | 9.5%              |
+| 🎨 CSS          | 8.7%              |
+
+
+Y si quieres que el README tenga un estilo más moderno, puedo ayudarte a agregar badges, secciones con íconos, o incluso una pequeña galería de capturas de pantalla del proyecto. ¿Te gustaría que lo llevemos al siguiente nivel visual?
+
 
 
 🛠️ Stack Técnico
@@ -41,5 +47,6 @@ Este repositorio incluye:
 Proyecto realizado por estudiantes del curso ITI-523. Cada integrante contribuyó en el diseño, desarrollo y documentación del sistema.
 📅 Fecha de entrega
 30 de agosto de 2025
+
 
 
